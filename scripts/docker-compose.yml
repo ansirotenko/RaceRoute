@@ -1,0 +1,43 @@
+version: '3.9'
+
+services:
+
+  race-route:
+    image: race-route:debug
+    profiles:
+      - all
+    ports:
+      - 5550:5000
+    networks:
+      - race-route
+    environment:
+      - Persistence__ConnectionString=Server=db,1401;Database=RoadRoute;User Id=SA;Password=My&Strong1234567;Encrypt=False;
+      - ASPNETCORE_ENVIRONMENT=Development
+      - UI_STATIC=staticFiles
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    profiles:
+      - db
+      - all
+    ports:
+      - 1401:1433
+    volumes:
+      - ../.mssql/data:/var/opt/mssql/data
+      - ../.mssql/log:/var/opt/mssql/log
+      - ../.mssql/secrets:/var/opt/mssql/secrets
+    networks:
+      - race-route
+    healthcheck:
+      test: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "My&Strong1234567" -Q "SELECT 1" || exit 1
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 10s
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=My&Strong1234567
+networks:
+  race-route: {}
