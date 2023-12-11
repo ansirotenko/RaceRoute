@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace RaceRoute.Data.Migrations
+namespace RaceRoute.Core.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration

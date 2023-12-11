@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using RaceRoute.Data.Context;
+using RaceRoute.Core.Context;
 
 #nullable disable
 
-namespace RaceRoute.Data.Migrations
+namespace RaceRoute.Core.Migrations
 {
     [DbContext(typeof(RaceRouteDbContext))]
     [Migration("20231211230148_InitialCreate")]
@@ -24,7 +24,7 @@ namespace RaceRoute.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("RaceRoute.Data.Domain.Point", b =>
+            modelBuilder.Entity("RaceRoute.Core.Domain.Point", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -43,7 +43,7 @@ namespace RaceRoute.Data.Migrations
                     b.ToTable("Points");
                 });
 
-            modelBuilder.Entity("RaceRoute.Data.Domain.Race", b =>
+            modelBuilder.Entity("RaceRoute.Core.Domain.Race", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -59,7 +59,7 @@ namespace RaceRoute.Data.Migrations
                     b.ToTable("Races");
                 });
 
-            modelBuilder.Entity("RaceRoute.Data.Domain.Track", b =>
+            modelBuilder.Entity("RaceRoute.Core.Domain.Track", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -96,21 +96,21 @@ namespace RaceRoute.Data.Migrations
                     b.ToTable("Tracks");
                 });
 
-            modelBuilder.Entity("RaceRoute.Data.Domain.Track", b =>
+            modelBuilder.Entity("RaceRoute.Core.Domain.Track", b =>
                 {
-                    b.HasOne("RaceRoute.Data.Domain.Point", "First")
+                    b.HasOne("RaceRoute.Core.Domain.Point", "First")
                         .WithMany("AsFirstTracks")
                         .HasForeignKey("FirstId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("RaceRoute.Data.Domain.Race", "Race")
+                    b.HasOne("RaceRoute.Core.Domain.Race", "Race")
                         .WithMany("Tracks")
                         .HasForeignKey("RaceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RaceRoute.Data.Domain.Point", "Second")
+                    b.HasOne("RaceRoute.Core.Domain.Point", "Second")
                         .WithMany("AsSecondTracks")
                         .HasForeignKey("SecondId")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -123,14 +123,14 @@ namespace RaceRoute.Data.Migrations
                     b.Navigation("Second");
                 });
 
-            modelBuilder.Entity("RaceRoute.Data.Domain.Point", b =>
+            modelBuilder.Entity("RaceRoute.Core.Domain.Point", b =>
                 {
                     b.Navigation("AsFirstTracks");
 
                     b.Navigation("AsSecondTracks");
                 });
 
-            modelBuilder.Entity("RaceRoute.Data.Domain.Race", b =>
+            modelBuilder.Entity("RaceRoute.Core.Domain.Race", b =>
                 {
                     b.Navigation("Tracks");
                 });

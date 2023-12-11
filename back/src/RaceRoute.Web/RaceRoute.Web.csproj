@@ -4,6 +4,6 @@
 		<PackageReference Include="Swashbuckle.AspNetCore" />
   </ItemGroup>
   <ItemGroup>
-		<ProjectReference Include="..\RaceRoute.Data\RaceRoute.Data.csproj" />
+		<ProjectReference Include="..\RaceRoute.Core\RaceRoute.Core.csproj" />
 	</ItemGroup>
 </Project>

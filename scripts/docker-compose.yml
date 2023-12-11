@@ -11,7 +11,7 @@ services:
     networks:
       - race-route
     environment:
-      - Persistence__ConnectionString=Server=db,1401;Database=RoadRoute;User Id=SA;Password=My&Strong1234567;Encrypt=False;
+      - ConnectionString=Server=db,1401;Database=RoadRoute;User Id=SA;Password=My&Strong1234567;Encrypt=False;
       - ASPNETCORE_ENVIRONMENT=Development
       - UI_STATIC=staticFiles
     depends_on:

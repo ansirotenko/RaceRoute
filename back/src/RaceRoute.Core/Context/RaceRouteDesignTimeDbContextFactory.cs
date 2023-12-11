@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
-namespace RaceRoute.Data.Context;
+namespace RaceRoute.Core.Context;
 public class DesignTimeAppDbContextFactory : IDesignTimeDbContextFactory<RaceRouteDbContext>
 {
     public RaceRouteDbContext CreateDbContext(string[] args)

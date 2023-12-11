@@ -1,7 +1,7 @@
 
 using System.ComponentModel.DataAnnotations;
 
-namespace RaceRoute.Data.Domain;
+namespace RaceRoute.Core.Domain;
 
 public class Race 
 {

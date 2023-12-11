@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using RaceRoute.Data.Domain;
+using RaceRoute.Core.Domain;
 
-namespace RaceRoute.Data.Context;
+namespace RaceRoute.Core.Context;
 
 public class RaceRouteDbContext: DbContext
 {

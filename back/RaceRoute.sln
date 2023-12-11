@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A051874D-121
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaceRoute.Web", "src\RaceRoute.Web\RaceRoute.Web.csproj", "{2B1E78DA-6C55-460C-A440-69D9018CA2AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaceRoute.Data", "src\RaceRoute.Data\RaceRoute.Data.csproj", "{867800E8-00BF-43E2-BCD6-063470D99901}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaceRoute.Core", "src\RaceRoute.Core\RaceRoute.Core.csproj", "{867800E8-00BF-43E2-BCD6-063470D99901}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,5 +1,5 @@
 
-namespace RaceRoute.Data.Domain;
+namespace RaceRoute.Core.Domain;
 
 public enum MaxSpeed 
 {
