@@ -12,6 +12,8 @@ public class GenerateArgs
     public double HeightStddev { get; set; }
     public double DistanceMean { get; set; }
     public double DistanceStddev { get; set; }
+    public double SurfaceSmoothness { get; set; }
+    public double SpeedSmoothness { get; set; }
     public int MaxPoints { get; set; }
 }
 
@@ -49,6 +51,12 @@ public class RaceRouteRepository : IRaceRouteRepository
         if (args.DistanceStddev <= 0.001)
             throw new ArgumentException($"Too small or negative DistanceStddev {args.DistanceStddev}");
 
+        if (args.SurfaceSmoothness <= 0.001 || args.SurfaceSmoothness >= 1)
+            throw new ArgumentException($"SurfaceSmoothness must be in range 0 - 1, But was {args.SurfaceSmoothness}");
+
+        if (args.SpeedSmoothness <= 0.001 || args.SpeedSmoothness >= 1)
+            throw new ArgumentException($"SpeedSmoothness must be in range 0 - 1, But was {args.SpeedSmoothness}");
+
         var maxSpeedCount = Enum.GetValues(typeof(MaxSpeed)).Length;
         var surfaceCount = Enum.GetValues(typeof(Surface)).Length;
         var rnd = new Random();
@@ -57,6 +65,7 @@ public class RaceRouteRepository : IRaceRouteRepository
 
         var firstPoint = new Point { Name = $"Point #{++pointsCount}", Height = SampleGaussian(rnd, args.HeightMean, args.HeightStddev) };
         var surface = (Surface)rnd.Next(surfaceCount);
+        var maxSpeed = (MaxSpeed)rnd.Next(maxSpeedCount);
         var tracks = Enumerable.Range(0, nTracks)
                     .Select(i =>
                     {
@@ -66,13 +75,17 @@ public class RaceRouteRepository : IRaceRouteRepository
                             Distance = SampleGaussian(rnd, args.DistanceMean, args.DistanceStddev),
                             First = firstPoint,
                             Second = secondPoint,
-                            MaxSpeed = (MaxSpeed)rnd.Next(maxSpeedCount),
+                            MaxSpeed = maxSpeed,
                             Surface = surface,
                         };
                         firstPoint = secondPoint;
-                        if (rnd.Next(10) > 7)
+                        if (rnd.NextDouble() > args.SurfaceSmoothness)
                         {
                             surface = (Surface)(((int)surface + rnd.Next(surfaceCount - 1) + 1) % surfaceCount);
+                        }
+                        if (rnd.NextDouble() > args.SpeedSmoothness)
+                        {
+                            maxSpeed = (MaxSpeed)(((int)maxSpeed + rnd.Next(maxSpeedCount - 1) + 1) % maxSpeedCount);
                         }
                         return track;
                     }).ToList();
