@@ -11,7 +11,7 @@ using RaceRoute.Core.Context;
 namespace RaceRoute.Core.Migrations
 {
     [DbContext(typeof(RaceRouteDbContext))]
-    [Migration("20231212012030_InitialCreate")]
+    [Migration("20231212122225_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

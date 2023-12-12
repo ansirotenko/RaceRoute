@@ -1,8 +1,14 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using RaceRoute.Core;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services
+    .AddControllers()
+    .AddJsonOptions(x => {
+        x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddRaceRouteDb(builder.Configuration);

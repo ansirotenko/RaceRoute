@@ -5,6 +5,6 @@ public record TrackDto(int Id, int FirstId, int SecondId, double Distance, Surfa
 {
     public static TrackDto From(Track track)
     {
-        return new TrackDto(track.Id, track.First.Id, track.Second.Id, track.Distance, track.Surface, track.MaxSpeed);
+        return new TrackDto(track.Id, track.FirstId, track.SecondId, track.Distance, track.Surface, track.MaxSpeed);
     }
 }

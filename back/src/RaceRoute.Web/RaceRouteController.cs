@@ -22,8 +22,8 @@ public class RaceRouteController : ControllerBase
         return raceRouteRepository.GetRaces(cancellationToken);
     }
 
-    [HttpGet("raceRoutes/{id}")]
-    public Task<(PointDto[] Points, TrackDto[] Tracks)> GetRaceInfo(int raceId, CancellationToken cancellationToken)
+    [HttpGet("raceRoutes/{raceId}")]
+    public Task<RaceInfoResult> GetRaceInfo(int raceId, CancellationToken cancellationToken)
     {
         return raceRouteRepository.GetRaceInfo(raceId, cancellationToken);
     }

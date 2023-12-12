@@ -1,4 +1,5 @@
 
+using System.Security.Cryptography.X509Certificates;
 using Microsoft.EntityFrameworkCore;
 using RaceRoute.Core.Context;
 using RaceRoute.Core.Domain;
@@ -6,21 +7,20 @@ using RaceRoute.Core.Dto;
 
 namespace RaceRoute.Core;
 
-public class GenerateArgs
-{
-    public double HeightMean { get; set; }
-    public double HeightStddev { get; set; }
-    public double DistanceMean { get; set; }
-    public double DistanceStddev { get; set; }
-    public double SurfaceSmoothness { get; set; }
-    public double SpeedSmoothness { get; set; }
-    public int MaxPoints { get; set; }
-}
+public record GenerateArgs(double HeightMean, 
+                           double HeightStddev, 
+                           double DistanceMean, 
+                           double DistanceStddev, 
+                           double SurfaceSmoothness,
+                           double SpeedSmoothness, 
+                           int MaxPoints);
+
+public record RaceInfoResult(PointDto[] Points, TrackDto[] Tracks);
 
 public interface IRaceRouteRepository
 {
     Task<RaceDto[]> GetRaces(CancellationToken cancellation);
-    Task<(PointDto[] Points, TrackDto[] Tracks)> GetRaceInfo(int raceId, CancellationToken cancellation);
+    Task<RaceInfoResult> GetRaceInfo(int raceId, CancellationToken cancellation);
     Task<RaceDto> GenerateNewRace(GenerateArgs args, CancellationToken cancellation);
     Task<RaceDto> RemoveRace(int raceId, CancellationToken cancellation);
 }
@@ -112,11 +112,11 @@ public class RaceRouteRepository : IRaceRouteRepository
         return y1 * stddev + mean;
     }
 
-    public async Task<(PointDto[] Points, TrackDto[] Tracks)> GetRaceInfo(int raceId, CancellationToken cancellation)
+    public async Task<RaceInfoResult> GetRaceInfo(int raceId, CancellationToken cancellation)
     {
         var ret = await dbContext.Races
             .Where(r => r.Id == raceId)
-            .Select(r => new { r.Tracks, Points = r.Tracks.Select(t => t.First).Concat(r.Tracks.Select(t => t.Second)).Distinct() })
+            .Select(r => new { r.Tracks, Points = r.Tracks.Select(t => t.First).Union(r.Tracks.Select(t => t.Second)) })
             .FirstOrDefaultAsync(cancellation);
         if (ret == null)
             throw new ArgumentException($"Race '{raceId}' doesnt exists");
@@ -124,7 +124,7 @@ public class RaceRouteRepository : IRaceRouteRepository
         var tracks = ret.Tracks.Select(TrackDto.From).ToArray();
         var points = ret.Points.Select(PointDto.From).ToArray();
 
-        return (points, tracks);
+        return new (points, tracks);
     }
 
     public async Task<RaceDto[]> GetRaces(CancellationToken cancellation)
@@ -141,7 +141,13 @@ public class RaceRouteRepository : IRaceRouteRepository
         if (toBeDeleted == null)
             throw new ArgumentException($"Race '{raceId}' doesnt exists");
 
+        var tracksQuery = dbContext.Tracks.Where(t => t.Race.Id == raceId);
+        var pointIds = await tracksQuery.Select(t => t.FirstId)
+                        .Union(tracksQuery.Select(t => t.SecondId))
+                        .ToArrayAsync();
         dbContext.Remove(toBeDeleted);
+        await dbContext.SaveChangesAsync(cancellation);
+        dbContext.Points.RemoveRange(pointIds.Select(pid => new Point{Id = pid}));
         await dbContext.SaveChangesAsync(cancellation);
         return RaceDto.From(toBeDeleted);
     }

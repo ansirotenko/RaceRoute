@@ -8,7 +8,6 @@ public class RaceRouteDbContext: DbContext
     public RaceRouteDbContext(DbContextOptions<RaceRouteDbContext> options)
         : base(options)
     {
-        
     }
 
     public virtual DbSet<Race> Races { get; set; } = default;
