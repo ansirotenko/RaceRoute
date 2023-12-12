@@ -25,12 +25,14 @@ public class RaceRouteDbContext: DbContext
         modelBuilder.Entity<Point>()
             .HasMany(p => p.AsFirstTracks)
             .WithOne(t => t.First)
+            .HasForeignKey(t => t.FirstId)
             .OnDelete(DeleteBehavior.NoAction)
             .IsRequired();
 
         modelBuilder.Entity<Point>()
             .HasMany(p => p.AsSecondTracks)
             .WithOne(t => t.Second)
+            .HasForeignKey(t => t.SecondId)
             .OnDelete(DeleteBehavior.NoAction)
             .IsRequired();
     }

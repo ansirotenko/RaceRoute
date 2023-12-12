@@ -1,4 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
+using RaceRoute.Core;
+using RaceRoute.Core.Domain;
+using RaceRoute.Core.Dto;
 
 namespace RaceRoute.Web;
 
@@ -6,27 +9,34 @@ namespace RaceRoute.Web;
 [Route("api")]
 public class RaceRouteController : ControllerBase
 {
-    [HttpGet("raceRoutes")]
-    public Task<string[]> All()
+    private readonly IRaceRouteRepository raceRouteRepository;
+
+    public RaceRouteController(IRaceRouteRepository raceRouteRepository)
     {
-        return Task.FromResult(new string[]{"a", "b"});
+        this.raceRouteRepository = raceRouteRepository;
+    }
+
+    [HttpGet("raceRoutes")]
+    public Task<RaceDto[]> GetRaces(CancellationToken cancellationToken)
+    {
+        return raceRouteRepository.GetRaces(cancellationToken);
     }
 
     [HttpGet("raceRoutes/{id}")]
-    public Task<string> Single(string id)
+    public Task<(PointDto[] Points, TrackDto[] Tracks)> GetRaceInfo(int raceId, CancellationToken cancellationToken)
     {
-        return Task.FromResult(id);
+        return raceRouteRepository.GetRaceInfo(raceId, cancellationToken);
     }
 
     [HttpPut("raceRoutes")]
-    public Task Add(string id)
+    public Task<RaceDto> GenerateNewRace(GenerateArgs args, CancellationToken cancellationToken)
     {
-        return Task.CompletedTask;
+        return raceRouteRepository.GenerateNewRace(args, cancellationToken);
     }
 
     [HttpDelete("raceRoutes")]
-    public Task Delete(string id)
+    public async Task Delete(int raceId, CancellationToken cancellationToken)
     {
-        return Task.CompletedTask;
+        await raceRouteRepository.RemoveRace(raceId, cancellationToken);
     }
 }

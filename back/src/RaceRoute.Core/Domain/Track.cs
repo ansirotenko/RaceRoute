@@ -7,7 +7,9 @@ public class Track
 {
     [Key]
     public int Id { get; set; }
+    public int FirstId { get; set; }
     public Point First { get; set; }
+    public int SecondId { get; set; }
     public Point Second { get; set; }
     public double Distance { get; set; }
     public Surface Surface { get; set; }

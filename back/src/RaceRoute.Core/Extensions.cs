@@ -15,6 +15,8 @@ public static class Extensions
 
         services.AddHealthChecks()
             .AddDbContextCheck<RaceRouteDbContext>();
+
+        services.AddScoped<IRaceRouteRepository, RaceRouteRepository>();
         return services;
     }
 

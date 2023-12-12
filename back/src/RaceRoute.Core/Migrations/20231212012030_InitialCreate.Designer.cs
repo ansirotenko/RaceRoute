@@ -11,7 +11,7 @@ using RaceRoute.Core.Context;
 namespace RaceRoute.Core.Migrations
 {
     [DbContext(typeof(RaceRouteDbContext))]
-    [Migration("20231211230148_InitialCreate")]
+    [Migration("20231212012030_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -32,8 +32,8 @@ namespace RaceRoute.Core.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Height")
-                        .HasColumnType("int");
+                    b.Property<double>("Height")
+                        .HasColumnType("float");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
