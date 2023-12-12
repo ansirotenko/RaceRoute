@@ -11,9 +11,14 @@ services:
     networks:
       - race-route
     environment:
-      - ConnectionString=Server=db,1401;Database=RoadRoute;User Id=SA;Password=My&Strong1234567;Encrypt=False;
+      - ConnectionString=Server=db,1433;Database=RoadRoute;User Id=SA;Password=My&Strong1234567;Encrypt=False;
       - ASPNETCORE_ENVIRONMENT=Development
       - UI_STATIC=staticFiles
+    healthcheck:
+      test: curl --silent --fail http://localhost:5000/healthz || exit 1
+      interval: 5s
+      timeout: 10s
+      retries: 3
     depends_on:
       db:
         condition: service_healthy

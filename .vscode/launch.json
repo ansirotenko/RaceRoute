@@ -1,0 +1,35 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Attach to process",
+            "type": "coreclr",
+            "request": "attach",
+            "processName": "RaceRoute.Web"
+        },
+        {
+            "name": "Attach to docker",
+            "type": "coreclr",
+            "request": "attach",
+            "processName": "dotnet",
+            "sourceFileMap": {
+                // mapping of source code inside a container to the source code on a host machine
+                "/app": "${workspaceRoot}/back/src/RaceRoute.Web"
+            },
+            "pipeTransport": {
+                "pipeProgram": "C:\\Program Files\\Git\\bin\\bash.exe",
+                "pipeCwd": "${workspaceRoot}",
+                "pipeArgs": [
+                    "./scripts/docker-debug.sh",
+                    "--ancestor race-route:debug"
+                ],
+                "quoteArgs": false,
+                // path to installed debugger inside a container relative to WORKDIR
+                "debuggerPath": "../vsdbg/vsdbg"
+            }
+        }
+    ]
+}
