@@ -13,7 +13,7 @@ services:
     environment:
       - ConnectionString=Server=db,1433;Database=RoadRoute;User Id=SA;Password=My&Strong1234567;Encrypt=False;
       - ASPNETCORE_ENVIRONMENT=Development
-      - UI_STATIC=staticFiles
+      - UiStaticMode=staticFiles
     healthcheck:
       test: curl --silent --fail http://localhost:5000/healthz || exit 1
       interval: 5s

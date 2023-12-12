@@ -13,6 +13,6 @@ cd ../
 
 dotnet publish %projectPath%/%project%.csproj -c %configuration%
 
-xcopy /S /Q /Y /d "./front/build" "%projectPath%/bin/%configuration%/%dotnetVersion%/publish/wwwwroot/"
+xcopy /S /Q /Y /D /e /i "./front/dist" "%projectPath%/bin/%configuration%/%dotnetVersion%/publish/wwwroot/"
 
 docker build %projectPath%/bin/%configuration%/%dotnetVersion%/publish -t race-route:debug -f %projectPath%/Dockerfile --build-arg INSTALL_CLRDBG=%installDebugClr%

@@ -27,6 +27,22 @@ if (!app.Environment.IsDevelopment())
     app.UseHttpsRedirection();
 }
 
+var uiStaticMode = app.Configuration.GetSection("UiStaticMode").Value;
+switch (uiStaticMode)
+{
+    case "staticFiles":
+        app.UseStaticFiles();
+        app.MapFallbackToFile("index.html");
+        break;
+    case "devServer":
+        app.UseSpa(s => {
+            s.UseProxyToSpaDevelopmentServer(app.Configuration.GetSection("UiStaticDevServer").Value);
+        });
+        break;
+    default:
+        throw new ApplicationException($"Wrong configuration for ui static files: either 'staticFiles' or 'devServer' are valid values for 'UiStaticMode' configuration. Actual is {uiStaticMode}");
+}
+
 app.MapControllers();
 app.MapHealthChecks("/healthz");
 

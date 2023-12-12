@@ -10,11 +10,11 @@
 
 	<ItemGroup>
 		<PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="$(MicrosoftPackagesVersion)" />
+		<PackageVersion Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="$(MicrosoftPackagesVersion)" />
 		<PackageVersion Include="Microsoft.EntityFrameworkCore" Version="$(MicrosoftPackagesVersion)" />
 		<PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="$(MicrosoftPackagesVersion)" />
 		<PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="$(MicrosoftPackagesVersion)" />
 		<PackageVersion Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="$(MicrosoftPackagesVersion)" />
-		
 		<PackageVersion Include="Swashbuckle.AspNetCore" Version="6.5.0" />
 	</ItemGroup>
 </Project>

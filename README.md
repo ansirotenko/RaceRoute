@@ -1,8 +1,18 @@
 # RaceRoute
 
-Todo
-- UI_STATIC
-- SpaFiles + DevProxy
+## start docker
+- navigate to `scripts` folder
+- execute 'docker-build.cmd'
+- execute 'docker compose --profile all up'
+
+## start local dev
+- navigate to `scripts` folder
+- execute `docker compose --profile db up`
+- navigate to `front` folder
+- execute `npm ci`
+- execute `npm run dev`
+- navigate to `back` folder
+- execute `dotnet run --project src/RaceRoute.Web/RaceRoute.Web.csproj`
 
 # For developers
 ## migrations
