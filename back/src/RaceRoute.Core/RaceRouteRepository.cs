@@ -1,29 +1,10 @@
 
-using System.Security.Cryptography.X509Certificates;
 using Microsoft.EntityFrameworkCore;
 using RaceRoute.Core.Context;
 using RaceRoute.Core.Domain;
 using RaceRoute.Core.Dto;
 
 namespace RaceRoute.Core;
-
-public record GenerateArgs(double HeightMean, 
-                           double HeightStddev, 
-                           double DistanceMean, 
-                           double DistanceStddev, 
-                           double SurfaceSmoothness,
-                           double SpeedSmoothness, 
-                           int MaxPoints);
-
-public record RaceInfoResult(PointDto[] Points, TrackDto[] Tracks);
-
-public interface IRaceRouteRepository
-{
-    Task<RaceDto[]> GetRaces(CancellationToken cancellation);
-    Task<RaceInfoResult> GetRaceInfo(int raceId, CancellationToken cancellation);
-    Task<RaceDto> GenerateNewRace(GenerateArgs args, CancellationToken cancellation);
-    Task<RaceDto> RemoveRace(int raceId, CancellationToken cancellation);
-}
 
 public class RaceRouteRepository : IRaceRouteRepository
 {
@@ -127,12 +108,12 @@ public class RaceRouteRepository : IRaceRouteRepository
         return new (points, tracks);
     }
 
-    public async Task<RaceDto[]> GetRaces(CancellationToken cancellation)
+    public async Task<RacesResult> GetRaces(CancellationToken cancellation)
     {
         var races = await dbContext
             .Races
             .ToArrayAsync(cancellation);
-        return races.Select(RaceDto.From).ToArray();
+        return new RacesResult(races.Select(RaceDto.From).ToArray());
     }
 
     public async Task<RaceDto> RemoveRace(int raceId, CancellationToken cancellation)

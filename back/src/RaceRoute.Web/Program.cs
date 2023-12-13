@@ -1,6 +1,6 @@
-using System.Text.Json;
 using System.Text.Json.Serialization;
 using RaceRoute.Core;
+using RaceRoute.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +27,9 @@ if (!app.Environment.IsDevelopment())
     app.UseHttpsRedirection();
 }
 
+app.MapControllers();
+app.MapHealthChecks("/healthz");
+
 var uiStaticMode = app.Configuration.GetSection("UiStaticMode").Value;
 switch (uiStaticMode)
 {
@@ -35,16 +38,11 @@ switch (uiStaticMode)
         app.MapFallbackToFile("index.html");
         break;
     case "devServer":
-        app.UseSpa(s => {
-            s.UseProxyToSpaDevelopmentServer(app.Configuration.GetSection("UiStaticDevServer").Value);
-        });
+        app.UseMiddleware<ProxySpaDevServer>(app.Configuration.GetSection("UiStaticDevServer").Value);
         break;
     default:
         throw new ApplicationException($"Wrong configuration for ui static files: either 'staticFiles' or 'devServer' are valid values for 'UiStaticMode' configuration. Actual is {uiStaticMode}");
 }
-
-app.MapControllers();
-app.MapHealthChecks("/healthz");
 
 app.Services.ExecuteDbMigrations();
 
