@@ -17,8 +17,8 @@ public class RaceRouteRepository : IRaceRouteRepository
 
     public async Task<RaceDto> GenerateNewRace(GenerateArgs args, CancellationToken cancellation)
     {
-        if (args.MaxPoints <= 10)
-            throw new ArgumentException($"Too few MaxPoints. Must be more than 10, but was {args.MaxPoints}");
+        if (args.PointsNumber <= 10)
+            throw new ArgumentException($"Too few PointsNumber. Must be more than 10, but was {args.PointsNumber}");
 
         if (args.HeightMean <= 0.001)
             throw new ArgumentException($"Too small or negative HightMean {args.HeightMean}");
@@ -41,7 +41,7 @@ public class RaceRouteRepository : IRaceRouteRepository
         var maxSpeedCount = Enum.GetValues(typeof(MaxSpeed)).Length;
         var surfaceCount = Enum.GetValues(typeof(Surface)).Length;
         var rnd = new Random();
-        var nTracks = rnd.Next(args.MaxPoints - 1);
+        var nTracks = args.PointsNumber - 1;
         var pointsCount = await dbContext.Points.CountAsync(cancellation);
 
         var firstPoint = new Point { Name = $"Point #{++pointsCount}", Height = SampleGaussian(rnd, args.HeightMean, args.HeightStddev) };

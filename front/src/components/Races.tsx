@@ -1,5 +1,5 @@
 import { SyntheticEvent, useEffect, useState } from 'react';
-import { fetchRaces } from '../services/dataSource';
+import { deleteRace, fetchRaces } from '../services/dataSource';
 import { Race } from '../services/api';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -14,21 +14,23 @@ import Container from '@mui/system/Container';
 import Toolbar from '@mui/material/Toolbar';
 import Modal from '@mui/material/Modal';
 import logo from '../assets/race.svg';
+import { NewRaceDialog } from './NewRaceDialog';
+import { DeleteRaceDialog } from './DeleteRaceDialog';
 
 const modalStyle = {
   position: 'absolute',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 400,
   bgcolor: 'background.paper',
-  border: '2px solid #000',
+  border: '1px solid #494a4d',
   boxShadow: 24,
   p: 4,
 };
 
 export default function VerticalTabs() {
-  const [open, setOpen] = useState(false);
+  const [openCreate, setOpenCreate] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
   const [value, setValue] = useState(0);
   const [loading, setLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
@@ -52,7 +54,7 @@ export default function VerticalTabs() {
   function content() {
     if (loading) {
       return (
-        <Container maxWidth="lg" sx={{my: '2rem', textAlign: 'center'}}>
+        <Container maxWidth="lg" sx={{ my: '2rem', textAlign: 'center' }}>
           <CircularProgress color="inherit" />
         </Container>
       );
@@ -99,11 +101,16 @@ export default function VerticalTabs() {
   return (
     <>
       <AppBar position="static" sx={{ bgcolor: 'background.paper', mb: '1rem' }}>
-        <Box sx={{mx: "1.5rem"}}>
+        <Box sx={{ mx: '1.5rem' }}>
           <Toolbar disableGutters sx={{ display: 'flex', flexGrow: 1 }}>
             <img src={logo} height="40px" />
-            <div style={{ flexGrow: 1 }} />
-            <Button variant="outlined" onClick={() => setOpen(true)}>
+            <Box sx={{ flexGrow: 1 }} />
+            {!!races.length && (
+              <Button sx={{ mr: '0.5rem' }} variant="outlined" color="error" onClick={() => setOpenDelete(true)}>
+                Delete {races[value].name}
+              </Button>
+            )}
+            <Button variant="outlined" onClick={() => setOpenCreate(true)}>
               New race
             </Button>
           </Toolbar>
@@ -111,18 +118,40 @@ export default function VerticalTabs() {
       </AppBar>
       {content()}
       <Modal
-        open={open}
-        onClose={() => setOpen(false)}
+        open={openCreate}
+        onClose={() => setOpenCreate(false)}
         aria-labelledby="modal-modal-title"
         aria-controls="modal-modal-controls"
       >
-        <Box sx={modalStyle}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Generate a new race
-          </Typography>
-          <Typography id="modal-modal-controls" sx={{ mt: 2 }}>
-            asdad
-          </Typography>
+        <Box sx={{ ...modalStyle, width: 700 }}>
+          <NewRaceDialog
+            idControls="modal-modal-controls"
+            idTitle="modal-modal-title"
+            onSuccess={(race) => {
+              setValue(0);
+              setRaces((rs) => [race, ...rs]);
+              setOpenCreate(false);
+            }}
+          />
+        </Box>
+      </Modal>
+      <Modal
+        open={openDelete}
+        onClose={() => setOpenDelete(false)}
+        aria-labelledby="modal-modal-title"
+        aria-controls="modal-modal-controls"
+      >
+        <Box sx={{ ...modalStyle, width: 500 }}>
+          <DeleteRaceDialog
+            idControls="modal-modal-controls"
+            idTitle="modal-modal-title"
+            race={races[value]}
+            onDelete={() => {
+              setRaces((rs) => rs.filter((_, i) => i !== value));
+              setValue(0);
+              setOpenDelete(false);
+            }}
+          />
         </Box>
       </Modal>
     </>

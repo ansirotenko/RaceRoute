@@ -1,12 +1,15 @@
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Diagnostics;
 using RaceRoute.Core;
 using RaceRoute.Web;
+using static System.Net.Mime.MediaTypeNames;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
     .AddControllers()
-    .AddJsonOptions(x => {
+    .AddJsonOptions(x =>
+    {
         x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     });
 builder.Services.AddEndpointsApiExplorer();
@@ -22,10 +25,24 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-if (!app.Environment.IsDevelopment()) 
+if (!app.Environment.IsDevelopment())
 {
     app.UseHttpsRedirection();
 }
+
+app.UseExceptionHandler(exceptionHandlerApp =>
+    {
+        exceptionHandlerApp.Run(async context =>
+        {
+            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+
+            context.Response.ContentType = Text.Plain;
+
+            var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
+
+            await context.Response.WriteAsync(exceptionHandlerPathFeature.Error.Message);
+        });
+    });
 
 app.MapControllers();
 app.MapHealthChecks("/healthz");

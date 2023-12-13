@@ -10,7 +10,7 @@ public record GenerateArgs(double HeightMean,
                            double DistanceStddev, 
                            double SurfaceSmoothness,
                            double SpeedSmoothness, 
-                           int MaxPoints);
+                           int PointsNumber);
 
 public record RaceInfoResult(PointDto[] Points, TrackDto[] Tracks);
 public record RacesResult(RaceDto[] Races);

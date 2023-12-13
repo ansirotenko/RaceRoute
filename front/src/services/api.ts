@@ -36,5 +36,5 @@ export interface GenerateArgs {
   distanceStddev: number;
   surfaceSmoothness: number;
   speedSmoothness: number;
-  maxPoints: number;
+  pointsNumber: number;
 }

@@ -21,7 +21,7 @@ public class RacesController : ControllerBase
         return raceRouteRepository.GetRaces(cancellationToken);
     }
 
-    [HttpGet("{raceId}")]
+    [HttpGet("{raceId:int}")]
     public Task<RaceInfoResult> GetRaceInfo(int raceId, CancellationToken cancellationToken)
     {
         return raceRouteRepository.GetRaceInfo(raceId, cancellationToken);
@@ -33,8 +33,8 @@ public class RacesController : ControllerBase
         return raceRouteRepository.GenerateNewRace(args, cancellationToken);
     }
 
-    [HttpDelete("{raceId}")]
-    public async Task Delete([FromQuery]int raceId, CancellationToken cancellationToken)
+    [HttpDelete("{raceId:int}")]
+    public async Task Delete(int raceId, CancellationToken cancellationToken)
     {
         await raceRouteRepository.RemoveRace(raceId, cancellationToken);
     }
