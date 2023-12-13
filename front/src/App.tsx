@@ -1,10 +1,11 @@
-import './App.css'
+import Container from '@mui/material/Container';
+import Races from './components/Races';
 
 function App() {
   return (
-    <>
-      <h1>Race route</h1>
-    </>
+    <Container maxWidth="xl">
+      <Races />
+    </Container>
   )
 }
 
