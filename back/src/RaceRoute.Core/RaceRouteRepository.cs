@@ -112,6 +112,7 @@ public class RaceRouteRepository : IRaceRouteRepository
     {
         var races = await dbContext
             .Races
+            .OrderByDescending(r => r.Id)
             .ToArrayAsync(cancellation);
         return new RacesResult(races.Select(RaceDto.From).ToArray());
     }
