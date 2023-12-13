@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using RaceRoute.Core;
-using RaceRoute.Web;
 using static System.Net.Mime.MediaTypeNames;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +17,11 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddRaceRouteDb(builder.Configuration);
 
 var app = builder.Build();
+
+app.UseRouting();
+#pragma warning disable ASP0014 // Suggest using top level route registrations
+app.UseEndpoints(_ => {});
+#pragma warning restore ASP0014 // Suggest using top level route registrations
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -55,7 +60,10 @@ switch (uiStaticMode)
         app.MapFallbackToFile("index.html");
         break;
     case "devServer":
-        app.UseMiddleware<ProxySpaDevServer>(app.Configuration.GetSection("UiStaticDevServer").Value);
+        app.UseSpa(s =>
+        {
+            s.UseProxyToSpaDevelopmentServer(app.Configuration.GetSection("UiStaticDevServer").Value);
+        });
         break;
     default:
         throw new ApplicationException($"Wrong configuration for ui static files: either 'staticFiles' or 'devServer' are valid values for 'UiStaticMode' configuration. Actual is {uiStaticMode}");
