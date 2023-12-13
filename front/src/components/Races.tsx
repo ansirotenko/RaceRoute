@@ -1,5 +1,5 @@
 import { SyntheticEvent, useEffect, useState } from 'react';
-import { deleteRace, fetchRaces } from '../services/dataSource';
+import { fetchRaces } from '../services/dataSource';
 import { Race } from '../services/api';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
