@@ -99,7 +99,7 @@ export default function VerticalTabs() {
   return (
     <>
       <AppBar position="static" sx={{ bgcolor: 'background.paper', mb: '1rem' }}>
-        <Container maxWidth="xl">
+        <Box sx={{mx: "1.5rem"}}>
           <Toolbar disableGutters sx={{ display: 'flex', flexGrow: 1 }}>
             <img src={logo} height="40px" />
             <div style={{ flexGrow: 1 }} />
@@ -107,7 +107,7 @@ export default function VerticalTabs() {
               New race
             </Button>
           </Toolbar>
-        </Container>
+        </Box>
       </AppBar>
       {content()}
       <Modal

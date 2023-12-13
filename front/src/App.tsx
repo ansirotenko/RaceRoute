@@ -1,11 +1,11 @@
-import Container from '@mui/material/Container';
 import Races from './components/Races';
+import Box from '@mui/material/Box';
 
 function App() {
   return (
-    <Container maxWidth="xl">
+    <Box sx={{mx: "2rem"}}>
       <Races />
-    </Container>
+    </Box>
   )
 }
 
