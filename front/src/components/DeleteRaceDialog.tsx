@@ -46,7 +46,7 @@ export function DeleteRaceDialog({ onDelete, idTitle, race, idControls }: NewRac
                 await deleteRace(race.id);
                 onDelete();
               } catch (e) {
-                setServerErrors((e as { message: string }).message.split('\n'));
+                setServerErrors((e as Error).message.split('\n'));
               } finally {
                 setIsLoading(false);
               }

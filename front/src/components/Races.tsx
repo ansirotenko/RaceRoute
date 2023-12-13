@@ -3,19 +3,18 @@ import { fetchRaces } from '../services/dataSource';
 import { Race } from '../services/api';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import Button from '@mui/material/Button';
 import AppBar from '@mui/material/AppBar';
-import Container from '@mui/system/Container';
 import Toolbar from '@mui/material/Toolbar';
 import Modal from '@mui/material/Modal';
 import logo from '../assets/race.svg';
 import { NewRaceDialog } from './NewRaceDialog';
 import { DeleteRaceDialog } from './DeleteRaceDialog';
+import { RaceInfo } from './RaceInfo';
 
 const modalStyle = {
   position: 'absolute',
@@ -33,7 +32,7 @@ export default function VerticalTabs() {
   const [openDelete, setOpenDelete] = useState(false);
   const [value, setValue] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [hasError, setHasError] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [races, setRaces] = useState<Race[]>([]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -43,7 +42,7 @@ export default function VerticalTabs() {
         const response = await fetchRaces();
         setRaces(response);
       } catch (e) {
-        setHasError(true);
+        setError((e as Error).message || 'Error on loading races');
       } finally {
         setLoading(false);
       }
@@ -54,17 +53,17 @@ export default function VerticalTabs() {
   function content() {
     if (loading) {
       return (
-        <Container maxWidth="lg" sx={{ my: '2rem', textAlign: 'center' }}>
+        <Box sx={{ my: '2rem', textAlign: 'center' }}>
           <CircularProgress color="inherit" />
-        </Container>
+        </Box>
       );
     }
 
-    if (hasError) {
+    if (error) {
       return (
         <Alert severity="error">
           <AlertTitle>Error</AlertTitle>
-          Error on loading races
+          {error}
         </Alert>
       );
     }
@@ -92,7 +91,7 @@ export default function VerticalTabs() {
           ))}
         </Tabs>
         <Box sx={{ p: 3 }}>
-          <Typography component="h1">{races[value].name}</Typography>
+          <RaceInfo race={races[value]}/>
         </Box>
       </Box>
     );

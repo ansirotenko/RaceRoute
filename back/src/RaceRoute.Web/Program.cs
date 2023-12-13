@@ -18,6 +18,21 @@ builder.Services.AddRaceRouteDb(builder.Configuration);
 
 var app = builder.Build();
 
+
+app.UseExceptionHandler(exceptionHandlerApp =>
+    {
+        exceptionHandlerApp.Run(async context =>
+        {
+            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+
+            context.Response.ContentType = Text.Plain;
+
+            var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
+
+            await context.Response.WriteAsync(exceptionHandlerPathFeature.Error.Message);
+        });
+    });
+
 app.UseRouting();
 #pragma warning disable ASP0014 // Suggest using top level route registrations
 app.UseEndpoints(_ => {});
@@ -34,20 +49,6 @@ if (!app.Environment.IsDevelopment())
 {
     app.UseHttpsRedirection();
 }
-
-app.UseExceptionHandler(exceptionHandlerApp =>
-    {
-        exceptionHandlerApp.Run(async context =>
-        {
-            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-
-            context.Response.ContentType = Text.Plain;
-
-            var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
-
-            await context.Response.WriteAsync(exceptionHandlerPathFeature.Error.Message);
-        });
-    });
 
 app.MapControllers();
 app.MapHealthChecks("/healthz");

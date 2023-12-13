@@ -43,7 +43,7 @@ export function NewRaceDialog({ onSuccess, idTitle, idControls }: NewRaceDialogP
       const ret = await generateNewRace(data);
       onSuccess(ret);
     } catch (e) {
-      setServerErrors((e as { message: string }).message.split('\n'));
+      setServerErrors((e as Error).message.split('\n'));
     } finally {
       setIsLoading(false);
     }
