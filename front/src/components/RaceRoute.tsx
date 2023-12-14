@@ -20,7 +20,7 @@ export default function RaceRoute({ points, tracks }: RaceRouteProps) {
     const zoom = d3.zoom().scaleExtent([1, Infinity]);
     const width = 1200;
     const height = 400;
-    const margin = { top: 20, bottom: 5, left: 20, right: 5 };
+    const margin = { top: 15, bottom: 3, left: 15, right: 3 };
 
     const svg = d3
       .select(refSvg.current as Element)
