@@ -73,7 +73,7 @@ export default function RaceRoute({ points, tracks }: RaceRouteProps) {
       .attr('data-tooltip', (l) => l.text)
       .style('cursor', 'pointer')
       .style('stroke', (l) => l.color)
-      .style('stroke-width', '0.1rem');
+      .style('stroke-width', '0.17rem');
     lines.exit().remove();
 
     const dotR = 0.28;
