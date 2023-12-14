@@ -14,7 +14,7 @@ interface NewRaceDialogProps {
   onDelete: () => void;
 }
 
-export function DeleteRaceDialog({ onDelete, idTitle, race, idControls }: NewRaceDialogProps) {
+export default function DeleteRaceDialog({ onDelete, idTitle, race, idControls }: NewRaceDialogProps) {
   const [serverErrors, setServerErrors] = useState<string[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 

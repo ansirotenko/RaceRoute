@@ -1,27 +1,20 @@
-import { Point, Race } from '../services/api';
+import { Point, Race, Track } from '../services/api';
 import { useEffect, useState } from 'react';
 import { fetchRaceInfo } from '../services/dataSource';
 import Box from '@mui/material/Box';
 import Alert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
 import AlertTitle from '@mui/material/AlertTitle';
+import RaceRoute from './RaceRoute';
 
-interface RaceInfoProps {
+interface SingleRaceProps {
   race: Race;
 }
 
-interface Data {
-  
-}
-
-function getData(points: Point[], tracks: Track[]) {
-    return {} as Data;
-}
-
-export function RaceInfo({ race }: RaceInfoProps) {
+export default function SingleRace({ race }: SingleRaceProps) {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState<Data | null>(null);
+  const [data, setData] = useState<{points: Point[], tracks: Track[]} | null>(null);
 
   useEffect(() => {
     async function loadData() {
@@ -29,7 +22,7 @@ export function RaceInfo({ race }: RaceInfoProps) {
         setError(null);
         setLoading(true);
         const response = await fetchRaceInfo(race.id);
-        setData(getData(response.points, response.tracks));
+        setData(response);
       } catch (e) {
         setError((e as Error).message || 'Error on loading race info');
       } finally {
@@ -61,13 +54,5 @@ export function RaceInfo({ race }: RaceInfoProps) {
     );
   }
 
-  return <></>
-//   return <ChartContainer
-//   width={500}
-//   height={300}
-//   series={[{ data: uData, label: 'uv', type: 'bar' }]}
-//   xAxis={[{ scaleType: 'band', data: xLabels }]}
-// >
-//   <BarPlot />
-// </ChartContainer>;
+  return <RaceRoute tracks={data!.tracks} points={data!.points}/>;
 }

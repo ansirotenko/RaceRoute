@@ -12,9 +12,9 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Modal from '@mui/material/Modal';
 import logo from '../assets/race.svg';
-import { NewRaceDialog } from './NewRaceDialog';
-import { DeleteRaceDialog } from './DeleteRaceDialog';
-import { RaceInfo } from './RaceInfo';
+import NewRaceDialog from './NewRaceDialog';
+import DeleteRaceDialog from './DeleteRaceDialog';
+import SingleRace from './SingleRace';
 
 const modalStyle = {
   position: 'absolute',
@@ -90,8 +90,8 @@ export default function VerticalTabs() {
             <Tab key={r.id} label={r.name} id={`vertical-tab-${i}`} aria-controls={`vertical-tabpanel-${i}`} />
           ))}
         </Tabs>
-        <Box sx={{ p: 3 }}>
-          <RaceInfo race={races[value]}/>
+        <Box sx={{ p: 3, flexGrow: 1 }}>
+          <SingleRace race={races[value]}/>
         </Box>
       </Box>
     );

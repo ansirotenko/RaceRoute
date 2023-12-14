@@ -1,5 +1,4 @@
 using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using RaceRoute.Core;
 using static System.Net.Mime.MediaTypeNames;
@@ -10,7 +9,7 @@ builder.Services
     .AddControllers()
     .AddJsonOptions(x =>
     {
-        x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        // x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

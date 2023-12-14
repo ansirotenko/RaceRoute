@@ -15,7 +15,7 @@ interface NewRaceDialogProps {
   onSuccess: (race: Race) => void;
 }
 
-export function NewRaceDialog({ onSuccess, idTitle, idControls }: NewRaceDialogProps) {
+export default function NewRaceDialog({ onSuccess, idTitle, idControls }: NewRaceDialogProps) {
   const [serverErrors, setServerErrors] = useState<string[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -27,11 +27,11 @@ export function NewRaceDialog({ onSuccess, idTitle, idControls }: NewRaceDialogP
     mode: 'onChange',
     defaultValues: {
       heightMean: 100,
-      heightStddev: 30,
+      heightStddev: 10,
       distanceMean: 20,
-      distanceStddev: 5,
-      speedSmoothness: 0.5,
-      surfaceSmoothness: 0.85,
+      distanceStddev: 3,
+      speedSmoothness: 0.65,
+      surfaceSmoothness: 0.9,
       pointsNumber: 200,
     },
   });

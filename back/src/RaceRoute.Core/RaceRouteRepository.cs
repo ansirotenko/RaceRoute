@@ -53,7 +53,7 @@ public class RaceRouteRepository : IRaceRouteRepository
                         var secondPoint = new Point { Name = $"Point #{++pointsCount}", Height = SampleGaussian(rnd, args.HeightMean, args.HeightStddev) };
                         var track = new Track
                         {
-                            Distance = SampleGaussian(rnd, args.DistanceMean, args.DistanceStddev),
+                            Distance = Math.Sqrt(Math.Pow(SampleGaussian(rnd, args.DistanceMean, args.DistanceStddev),2) + Math.Pow(firstPoint.Height - secondPoint.Height, 2)),
                             First = firstPoint,
                             Second = secondPoint,
                             MaxSpeed = maxSpeed,

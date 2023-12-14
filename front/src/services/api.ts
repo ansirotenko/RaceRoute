@@ -38,3 +38,42 @@ export interface GenerateArgs {
   speedSmoothness: number;
   pointsNumber: number;
 }
+
+export type Dot = {
+  x: number;
+  y: number;
+  text: string;
+};
+
+export type Line = {
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+  color: string;
+  text: string;
+};
+
+export type Rectangle = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  color: string;
+  text: string;
+};
+
+export type Range = {
+  min: number;
+  max: number;
+};
+
+export type ChartData = {
+  dots: Dot[];
+  lines: Line[];
+  rectangles: Rectangle[];
+  bound: {
+    x: Range;
+    y: Range;
+  };
+};
