@@ -77,7 +77,7 @@ export default function VerticalTabs() {
     };
 
     return (
-      <Box sx={{ flexGrow: 1, bgcolor: 'background.paper', display: 'flex' }}>
+      <Box sx={{ flexGrow: 1, bgcolor: 'background.paper', display: 'flex', height: '100vh' }}>
         <Tabs
           orientation="vertical"
           variant="scrollable"

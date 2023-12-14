@@ -18,11 +18,13 @@ export default function RaceRoute({ points, tracks }: RaceRouteProps) {
   useEffect(() => {
     const data = getData(points, tracks);
     const zoom = d3.zoom().scaleExtent([1, Infinity]);
+    const width = 1200;
+    const height = 400;
+    const margin = { top: 20, bottom: 5, left: 20, right: 5 };
 
     const svg = d3
       .select(refSvg.current as Element)
-      .attr('width', '100%')
-      .attr('height', '600px')
+      .attr('viewBox', `0 0 ${width} ${height}`)
       .call(
         zoom.on('zoom', function (e) {
           mainGroup.transition().duration(20).attr('transform', e.transform);
@@ -33,66 +35,78 @@ export default function RaceRoute({ points, tracks }: RaceRouteProps) {
     const mainGroup = svg.append('g');
 
     d3.select('#zoomOut').on('click', function () {
-        zoom.scaleBy(mainGroup as unknown as d3.Selection<Element, unknown, null, undefined>, 1);
-        svg.call(zoom.transform, d3.zoomIdentity);
+      zoom.scaleBy(mainGroup as unknown as d3.Selection<Element, unknown, null, undefined>, 1);
+      svg.call(zoom.transform, d3.zoomIdentity);
     });
 
-    const xScale = d3.scaleLinear().range([0, 100]).domain([data.bound.x.min, data.bound.x.max]);
-    const yScale = d3.scaleLinear().range([100, 0]).domain([data.bound.y.min, data.bound.y.max]);
+    const xScale = d3
+      .scaleLinear()
+      .range([margin.left, width - margin.right])
+      .domain([data.bound.x.min, data.bound.x.max]);
+    const yScale = d3
+      .scaleLinear()
+      .range([height - margin.bottom, margin.top])
+      .domain([data.bound.y.min, data.bound.y.max]);
 
-    function xPos(x: number) {
-      return `${xScale(x)}%`;
+    function updateData() {
+      mainGroup.selectAll('rect').remove();
+      const rects = mainGroup.selectAll('rect').data(data.rectangles);
+      rects
+        .enter()
+        .append('rect')
+        .attr('x', (r) => xScale(r.x))
+        .attr('y', (r) => yScale(r.y))
+        .attr('width', (r) => xScale(r.width))
+        .attr('height', (r) => yScale(r.height))
+        .attr('data-tooltip', (r) => r.text)
+        .style('fill', (r) => r.color);
+      rects.exit().remove();
+
+      mainGroup.selectAll('line').remove();
+      const lines = mainGroup.selectAll('line').data(data.lines);
+      lines
+        .enter()
+        .append('line')
+        .attr('x1', (l) => xScale(l.x1))
+        .attr('y1', (l) => yScale(l.y1))
+        .attr('x2', (l) => xScale(l.x2))
+        .attr('y2', (l) => yScale(l.y2))
+        .attr('data-tooltip', (l) => l.text)
+        .style('cursor', 'pointer')
+        .style('stroke', (l) => l.color)
+        .style('stroke-width', 1.5);
+      lines.exit().remove();
+
+      const dotR = 4;
+      mainGroup.selectAll('circle').remove();
+      const dots = mainGroup.selectAll('circle').data(data.dots);
+      dots
+        .enter()
+        .append('circle')
+        .attr('cx', (d) => xScale(d.x))
+        .attr('cy', (d) => yScale(d.y))
+        .attr('margin-left', dotR / 2)
+        .attr('margin-top', dotR / 2)
+        .attr('r', dotR / 2)
+        .attr('data-tooltip', (d) => d.text)
+        .style('cursor', 'pointer')
+        .style('fill', '#dee5e4')
+        .style('stroke', '#2b2929')
+        .style('stroke-width', 0.5);
+      dots.exit().remove();
     }
 
-    function yPos(y: number) {
-      return `${yScale(y)}%`;
-    }
+    updateData();
 
-    mainGroup.selectAll('rect').remove();
-    const rects = mainGroup.selectAll('rect').data(data.rectangles);
-    rects
-      .enter()
-      .append('rect')
-      .attr('x', (r) => xPos(r.x))
-      .attr('y', (r) => yPos(r.y))
-      .attr('width', (r) => xPos(r.width))
-      .attr('height', (r) => yPos(r.height))
-      .attr('data-tooltip', (r) => r.text)
-      .style('fill', (r) => r.color);
-    rects.exit().remove();
+    const yAxis = d3.axisLeft(yScale).ticks(10).tickSize(1);
+    mainGroup.append('g').attr('transform', `translate(${margin.left},0)`).call(yAxis);
 
-    mainGroup.selectAll('line').remove();
-    const lines = mainGroup.selectAll('line').data(data.lines);
-    lines
-      .enter()
-      .append('line')
-      .attr('x1', (l) => xPos(l.x1))
-      .attr('y1', (l) => yPos(l.y1))
-      .attr('x2', (l) => xPos(l.x2))
-      .attr('y2', (l) => yPos(l.y2))
-      .attr('data-tooltip', (l) => l.text)
-      .style('cursor', 'pointer')
-      .style('stroke', (l) => l.color)
-      .style('stroke-width', '0.17rem');
-    lines.exit().remove();
+    const xAxis = d3.axisTop(xScale).ticks(20).tickSize(1);
+    mainGroup.append('g').attr('transform', `translate(0, ${margin.top})`).call(xAxis);
 
-    const dotR = 0.28;
-    mainGroup.selectAll('circle').remove();
-    const dots = mainGroup.selectAll('circle').data(data.dots);
-    dots
-      .enter()
-      .append('circle')
-      .attr('cx', (d) => xPos(d.x))
-      .attr('cy', (d) => yPos(d.y))
-      .attr('margin-left', `${dotR / 2}rem`)
-      .attr('margin-top', `${dotR / 2}rem`)
-      .attr('r', `${dotR}rem`)
-      .attr('data-tooltip', (d) => d.text)
-      .style('cursor', 'pointer')
-      .style('fill', '#dee5e4')
-      .style('stroke', '#2b2929')
-      .style('stroke-width', '0.07rem');
-    dots.exit().remove();
+    mainGroup
+    .call((g) => g.selectAll('.domain').attr('stroke-width', 0.5))
+    .call((g) => g.selectAll('.tick text').attr('font-size', 7));
 
     const tip = applyTooltip(mainGroup, ['circle', 'line', 'rect']);
 
@@ -103,7 +117,7 @@ export default function RaceRoute({ points, tracks }: RaceRouteProps) {
   }, [points, tracks]);
 
   return (
-    <Box sx={{ position: 'relative', height: '40rem', width: '100%', border: '1px solid gray', p: '0.5rem' }}>
+    <Box sx={{ position: 'relative', width: '100%', border: '1px solid gray', p: '0.5rem' }}>
       <svg ref={refSvg} />
       <Button
         id="zoomOut"
