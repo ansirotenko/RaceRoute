@@ -1,5 +1,10 @@
 # RaceRoute
 
+## Description
+
+- [En description](./docs/en.md)
+- [Ru description](https://gist.github.com/Eflarus/7bae02da72d49ed6991e1680af79006d)
+
 ## start docker
 - navigate to `scripts` folder
 - execute 'docker-build.cmd'
